@@ -1,43 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
 import TextFieldGroup from '../common/TextFieldGroup';
 
 class Register extends Component {
-
   constructor() {
     super();
-
     this.state = {
       name: '',
       email: '',
       password: '',
       password2: '',
       errors: {}
-    }
+    };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-
-    const newUser = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2
-    }
-
-    this.props.registerUser(newUser, this.props.history);
   }
 
   componentDidMount() {
@@ -52,20 +32,36 @@ class Register extends Component {
     }
   }
 
-  render() {
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
 
+  onSubmit(e) {
+    e.preventDefault();
+
+    const newUser = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2
+    };
+
+    this.props.registerUser(newUser, this.props.history);
+  }
+
+  render() {
     const { errors } = this.state;
-    const { user } = this.props.auth;
 
     return (
       <div className="register">
-        {user ? user.name : null}
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
               <h1 className="display-4 text-center">Sign Up</h1>
-              <p className="lead text-center">Create your DevConnect account</p>
-              <form action="create-profile.html" onSubmit={this.onSubmit}>
+              <p className="lead text-center">
+                Create your DevConnector account
+              </p>
+              <form noValidate onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="Name"
                   name="name"
@@ -76,9 +72,10 @@ class Register extends Component {
                 <TextFieldGroup
                   placeholder="Email"
                   name="email"
+                  type="email"
                   value={this.state.email}
                   onChange={this.onChange}
-                  error={errors.name}
+                  error={errors.email}
                   info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
                 />
                 <TextFieldGroup
@@ -90,7 +87,7 @@ class Register extends Component {
                   error={errors.password}
                 />
                 <TextFieldGroup
-                  placeholder="Confirm password"
+                  placeholder="Confirm Password"
                   name="password2"
                   type="password"
                   value={this.state.password2}
@@ -103,7 +100,7 @@ class Register extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -111,9 +108,9 @@ Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
-}
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors
 });
